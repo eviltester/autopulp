@@ -33,13 +33,27 @@ public class CanChangeVersionTest {
     }
 
     @Test
+    public void canChangeVersionViaDirectUrl(){
+
+        // these direct urls are used by the other pages so if we check here
+        // all we do next time is check that the links are enabled, clickable
+        // and have the correct href
+        for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
+            //https://thepulper.herokuapp.com/apps/pulp/gui/admin/version/10
+            driver.get(url + "gui/admin/version/" + version);
+
+            assertFooterShowsCorrectVersion(version);
+        }
+    }
+
+    @Test
     public void canChangeVersionViaHelpPage(){
 
         for(int getversion = 1; getversion <= ThePulperApp.MAXVERSION; getversion++) {
 
-            for (int version = 1; version <= ThePulperApp.MAXVERSION; version++) {
+            driver.get(url + "gui/help" + "?v=" + getversion);
 
-                driver.get(url + "gui/help" + "?v=" + getversion);
+            for (int version = 1; version <= ThePulperApp.MAXVERSION; version++) {
 
                 final WebElement link =
                         new WebDriverWait(driver, 10).until(
@@ -48,14 +62,26 @@ public class CanChangeVersionTest {
                                 )
                         );
 
-                link.click();
-
-                new WebDriverWait(driver, 10).until(
-                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl() + "gui/"));
-
-                assertFooterShowsCorrectVersion(version);
+                assertLinkHasCorrectStateForVersion(link, version);
+//                link.click();
+//
+//                new WebDriverWait(driver, 10).until(
+//                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl() + "gui/"));
+//
+//                assertFooterShowsCorrectVersion(version);
             }
         }
+    }
+
+    private void assertLinkHasCorrectStateForVersion(final WebElement link, final int version) {
+        Assertions.assertTrue(link.isDisplayed(),
+                "link for version "+ version + " not displayed");
+        Assertions.assertTrue(link.isEnabled(),
+                "link for version "+ version + " not enabled");
+        Assertions.assertEquals(
+                url + "gui/admin/version/" + version,
+                        link.getAttribute("href"),
+                "link for version "+ version + " not admin version change as expected");
     }
 
     @Test
@@ -63,19 +89,21 @@ public class CanChangeVersionTest {
 
         for(int getversion = 1; getversion <= ThePulperApp.MAXVERSION; getversion++) {
 
-            for (int version = 1; version <= ThePulperApp.MAXVERSION; version++) {
+            driver.get(url + "/gui/menu/admin" + "?v=" + getversion);
 
-                driver.get(url + "/gui/menu/admin" + "?v=" + getversion);
+            for (int version = 1; version <= ThePulperApp.MAXVERSION; version++) {
 
                 final WebElement link =
                         driver.findElement(By.cssSelector("#help-list-set-version-" + version + " a"));
 
-                link.click();
+                assertLinkHasCorrectStateForVersion(link, version);
 
-                new WebDriverWait(driver, 10).until(
-                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl() + "gui/"));
-
-                assertFooterShowsCorrectVersion(version);
+//                link.click();
+//
+//                new WebDriverWait(driver, 10).until(
+//                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl() + "gui/"));
+//
+//                assertFooterShowsCorrectVersion(version);
             }
         }
     }
@@ -85,9 +113,9 @@ public class CanChangeVersionTest {
 
         for(int getversion = 1; getversion <= ThePulperApp.MAXVERSION; getversion++) {
 
-            for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
+            driver.get(url+ "?v=" + getversion);
 
-                driver.get(url+ "?v=" + getversion);
+            for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
 
                 // id is not present in all versions - added in v3
                 //final By adminMenuLocation = By.id("menu-admin-menu");
@@ -106,12 +134,14 @@ public class CanChangeVersionTest {
                 final WebElement link =
                         driver.findElement(By.cssSelector("#menu-set-version-" + version + " a"));
 
-                link.click();
+                assertLinkHasCorrectStateForVersion(link, version);
 
-                new WebDriverWait(driver,10).until(
-                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl()+"gui/"));
-
-                assertFooterShowsCorrectVersion(version);
+//                link.click();
+//
+//                new WebDriverWait(driver,10).until(
+//                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl()+"gui/"));
+//
+//                assertFooterShowsCorrectVersion(version);
             }
         }
     }
