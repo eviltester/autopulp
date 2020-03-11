@@ -1,4 +1,4 @@
-package uk.co.compendiumdev.thepulper.v002;
+package uk.co.compendiumdev.thepulper.v003;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -35,14 +35,14 @@ public class NavigationViaMenuTest {
     @Test
     public void canNavigateAroundSiteUsingMenu(){
 
-        driver.get(url + "?v=2");
+        driver.get(url + "?v=3");
 
-        int totalMenuItems = 37;
+        int totalMenuItems = 44;
 
         Assertions.assertEquals(totalMenuItems,
                 driver.findElements(
                         By.cssSelector("#primary_nav_wrap ul li")).size(),
-                "Unexpected number of menu items in version 2"
+                "Unexpected number of menu items in version 3"
         );
 
 
@@ -52,9 +52,9 @@ public class NavigationViaMenuTest {
         menuXpageTitle.put("Home", "Pulp App Main Menu");
         menuXpageTitle.put("Books", "Books Menu");
         menuXpageTitle.put("Authors", "Authors Menu");
-        menuXpageTitle.put("Publishers", "List of Publishers");
-        menuXpageTitle.put("Series", "List of Series");
-        menuXpageTitle.put("Years", "List of Years");
+        menuXpageTitle.put("Publishers", "Publishers Menu");
+        menuXpageTitle.put("Series", "Series Menu");
+        menuXpageTitle.put("Years", "Years Menu");
         menuXpageTitle.put("Search", "Search Page");
         menuXpageTitle.put("Create", "Create Menu");
         menuXpageTitle.put("Reports", "Reports Menu");
@@ -65,8 +65,16 @@ public class NavigationViaMenuTest {
         menuXpageTitle.put("Home > Menu", "Pulp App Main Menu");
         menuXpageTitle.put("Books > Table", "Table of Books");
         menuXpageTitle.put("Books > List", "List of Books");
+        menuXpageTitle.put("Books > FAQs", "List of Books");
         menuXpageTitle.put("Authors > List", "List of Authors");
         menuXpageTitle.put("Authors > FAQ", "List of Authors");
+        menuXpageTitle.put("Publishers > Publishers", "List of Publishers");
+        menuXpageTitle.put("Publishers > FAQ", "List of Publishers");
+        menuXpageTitle.put("Series > Series", "List of Series");
+        menuXpageTitle.put("Series > FAQ", "List of Series");
+        menuXpageTitle.put("Years > Years", "List of Years");
+        menuXpageTitle.put("Years > FAQs", "List of Years");
+
         menuXpageTitle.put("Create > Author", "Create Author");
         menuXpageTitle.put("Create > Series", "Create Series");
         menuXpageTitle.put("Create > Publisher", "Create Publisher");
