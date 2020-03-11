@@ -34,15 +34,27 @@ public class CanUseDropDownMenuWithHover {
     public void clickHelpOnAllVersionsAfterHover(){
 
         for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
+            System.out.println(version);
             driver.get(url + "?v=" + version);
+
+            // get this pointer away from nav - needed to get this working
+            // reliably on Firefox
+            new Actions(driver).moveToElement(
+                    driver.findElement(By.linkText("Contact"))).perform();
+
             WebElement home = driver.findElement(By.linkText("Home"));
+
+            // hover on Home to drop menu down
             new Actions(driver).moveToElement(home).perform();
             home = home.findElement(By.xpath("..")); // get parent li
+
+            // find Help
             final WebElement help = new WebDriverWait(driver, 10).until(
                     ExpectedConditions.elementToBeClickable(
                             home.findElement(By.linkText("Help"))
                     )
             );
+
             help.click();
             Assertions.assertEquals("Help", driver.getTitle());
         }

@@ -2,6 +2,7 @@ package uk.co.compendiumdev.thepulper.abstractions;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 /*
     I called this SessionManager, rather than DriverManager
@@ -19,6 +20,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
  */
 public class SessionManager {
     public static WebDriver getDriver() {
-        return new ChromeDriver();
+        return new FirefoxDriver();
+        //return new ChromeDriver();
     }
 }
