@@ -113,15 +113,15 @@ public class CanChangeVersionTest {
 
             driver.get(url + "gui/help" + "?v=" + getversion);
 
+            new WebDriverWait(driver, 10).until(
+                    ExpectedConditions.elementToBeClickable(
+                            By.cssSelector("#help-list-set-version-1 a")
+                    )
+            );
+
             for (int version = 1; version <= ThePulperApp.MAXVERSION; version++) {
 
-                final WebElement link =
-                        new WebDriverWait(driver, 10).until(
-                                ExpectedConditions.elementToBeClickable(
-                                        By.cssSelector("#help-list-set-version-" + version + " a")
-                                )
-                        );
-
+                final WebElement link = driver.findElement(By.cssSelector("#help-list-set-version-" + version + " a"));
                 assertLinkHasCorrectStateForVersion(link, version);
             }
         }
@@ -155,19 +155,6 @@ public class CanChangeVersionTest {
             nav.hoverMenuItem(driver, "Admin");
 
             for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
-
-
-
-//                // id is not present in all versions - added in v3
-//                //final By adminMenuLocation = By.id("menu-admin-menu");
-//                final By adminMenuLocation = By.linkText("Admin");
-//
-//                final WebElement adminMenu =
-//                        new WebDriverWait(driver,10).until(
-//                        ExpectedConditions.elementToBeClickable(adminMenuLocation));
-//
-//                // hover
-//                new Actions(driver).moveToElement(adminMenu).perform();
 
                 final WebElement link =
                         driver.findElement(By.cssSelector("#menu-set-version-" + version + " a"));
