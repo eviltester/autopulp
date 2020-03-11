@@ -1,9 +1,6 @@
 package uk.co.compendiumdev.thepulper.v003;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -191,8 +188,19 @@ public class PulperNavMenu {
             WebElement topLevelMenu =
                     getMenuItemWhenClickable(driver, parentLocator);
 
-            // hover
-            new Actions(driver).moveToElement(topLevelMenu).perform();
+            // fake hover by triggering alternative css - this prevents needing an action
+            // simply because actions interfere with the machine so can't do anything else
+            // NOTE: risk that hover doesn't actually work
+            WebElement hoverOn = topLevelMenu;
+            if(topLevelMenu.getTagName().equalsIgnoreCase("a")) {
+                // if we found the anchor then locate the li above it
+                hoverOn=topLevelMenu.findElement(By.xpath(".."));
+            }
+            ((JavascriptExecutor) driver).executeScript("arguments[0].className='shownow'", hoverOn);
+
+            //real hover
+            //new Actions(driver).moveToElement(topLevelMenu).perform();
+
 
             WebElement clickOn;
             SearchContext searchIn=driver;
