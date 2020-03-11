@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
+import uk.co.compendiumdev.thepulper.v003.PulperNavMenu;
 
 /*
     This was the first test I wrote for The Pulper.
@@ -150,18 +151,23 @@ public class CanChangeVersionTest {
 
             driver.get(url+ "?v=" + getversion);
 
+            final PulperNavMenu nav = new PulperNavMenu().getForVersion(getversion);
+            nav.hoverMenuItem(driver, "Admin");
+
             for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
 
-                // id is not present in all versions - added in v3
-                //final By adminMenuLocation = By.id("menu-admin-menu");
-                final By adminMenuLocation = By.linkText("Admin");
 
-                final WebElement adminMenu =
-                        new WebDriverWait(driver,10).until(
-                        ExpectedConditions.elementToBeClickable(adminMenuLocation));
 
-                // hover
-                new Actions(driver).moveToElement(adminMenu).perform();
+//                // id is not present in all versions - added in v3
+//                //final By adminMenuLocation = By.id("menu-admin-menu");
+//                final By adminMenuLocation = By.linkText("Admin");
+//
+//                final WebElement adminMenu =
+//                        new WebDriverWait(driver,10).until(
+//                        ExpectedConditions.elementToBeClickable(adminMenuLocation));
+//
+//                // hover
+//                new Actions(driver).moveToElement(adminMenu).perform();
 
                 final WebElement link =
                         driver.findElement(By.cssSelector("#menu-set-version-" + version + " a"));

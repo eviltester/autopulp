@@ -22,6 +22,13 @@ public class PulperNavMenu {
                 createMenuForVersionTwo();
                 break;
             case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
                 createMenuForVersionThree();
                 break;
             default:
@@ -188,19 +195,7 @@ public class PulperNavMenu {
             WebElement topLevelMenu =
                     getMenuItemWhenClickable(driver, parentLocator);
 
-            // fake hover by triggering alternative css - this prevents needing an action
-            // simply because actions interfere with the machine so can't do anything else
-            // NOTE: risk that hover doesn't actually work
-            WebElement hoverOn = topLevelMenu;
-            if(topLevelMenu.getTagName().equalsIgnoreCase("a")) {
-                // if we found the anchor then locate the li above it
-                hoverOn=topLevelMenu.findElement(By.xpath(".."));
-            }
-            ((JavascriptExecutor) driver).executeScript("arguments[0].className='shownow'", hoverOn);
-
-            //real hover
-            //new Actions(driver).moveToElement(topLevelMenu).perform();
-
+            hoverOver(driver, topLevelMenu);
 
             WebElement clickOn;
             SearchContext searchIn=driver;
@@ -229,6 +224,22 @@ public class PulperNavMenu {
         return menuItemUsed;
     }
 
+    private void hoverOver(final WebDriver driver, final WebElement topLevelMenu) {
+        // fake hover by triggering alternative css - this prevents needing an action
+        // simply because actions interfere with the machine so can't do anything else
+        // NOTE: risk that hover doesn't actually work
+        WebElement hoverOn = topLevelMenu;
+        if(topLevelMenu.getTagName().equalsIgnoreCase("a")) {
+            // if we found the anchor then locate the li above it
+            hoverOn=topLevelMenu.findElement(By.xpath(".."));
+        }
+        ((JavascriptExecutor) driver).executeScript("arguments[0].className='shownow'", hoverOn);
+
+        //real hover
+        //new Actions(driver).moveToElement(topLevelMenu).perform();
+
+    }
+
     private WebElement findMenuItemWhenClickable(final SearchContext search, final By locator, final WebDriver driver) {
         return new WebDriverWait(driver, 10).until(
                 ExpectedConditions.elementToBeClickable(
@@ -245,5 +256,10 @@ public class PulperNavMenu {
                         parentLocator
                 )
         );
+    }
+
+    public void hoverMenuItem(final WebDriver driver, final String menuTitle) {
+        PulperDropDownMenuItem menuItem = menuXDetails.get(menuTitle);
+        hoverOver(driver, driver.findElement(menuItem.getLocator()));
     }
 }
