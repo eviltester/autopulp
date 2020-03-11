@@ -36,6 +36,15 @@ public class PulperDropDownMenuItem {
         return subMenuWithoutId(pageTitle, menuPath);
     }
 
+    public static PulperDropDownMenuItem withId(final String menuTitle, final String pageTitle, final String menuId) {
+        return new PulperDropDownMenuItem(menuId, menuTitle, pageTitle);
+    }
+
+    public static PulperDropDownMenuItem subMenuItemWithId(final String menuPath, final String pageTitle, final String menuId) {
+        String[] path = menuPath.split(" > ");
+        return new PulperDropDownMenuItem(menuId, path[1], pageTitle, menuPath);
+    }
+
     public String menuId(){
         return menuId;
     }
