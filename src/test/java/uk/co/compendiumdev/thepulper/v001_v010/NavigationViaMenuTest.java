@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,8 +13,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
+import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
 import uk.co.compendiumdev.thepulper.v003.PulperDropDownMenuItem;
 import uk.co.compendiumdev.thepulper.v003.PulperNavMenu;
+
+import java.util.stream.IntStream;
 
 public class NavigationViaMenuTest {
 
@@ -38,9 +42,25 @@ public class NavigationViaMenuTest {
 
         If this works then I can delete the individual
         NavigationViaMenuTest for each version.
+
+        Originally this used a hard coded @ValueSource
+        @ValueSource(ints = { 1, 2, 3 , 4, 5, 6, 7, 8, 9, 10})
+
+        But that would require maintenance.
+
+        Since I already have an abstraction for the max version.
+
+        I can use that as the upper limit for a range so that this
+        test automatically updates when a new version is added to the
+        application and test code.
+
      */
+    static IntStream allPulperVersions() {
+        return IntStream.rangeClosed(1, ThePulperApp.MAXVERSION);
+    }
+
     @ParameterizedTest
-    @ValueSource(ints = { 1, 2, 3 , 4, 5, 6, 7, 8, 9, 10})
+    @MethodSource("allPulperVersions")
     public void canNavigateAroundSiteUsingMenuAbstractionForVersion(int version){
 
         driver.get(url + "?v=" + version);
@@ -55,7 +75,7 @@ public class NavigationViaMenuTest {
                 "Unexpected number of menu items in version "+version
         );
 
-
+        // check that we do use all the menu items
         int menusUsed = 0;
 
         for(String menuTitle : menu.itemKeys()){
