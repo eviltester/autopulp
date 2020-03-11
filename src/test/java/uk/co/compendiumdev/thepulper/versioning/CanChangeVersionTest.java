@@ -22,6 +22,8 @@ public class CanChangeVersionTest {
         driver = new ChromeDriver();
     }
 
+    // There is a risk that the link urls don't work - check if this is the case
+
     @Test
     public void canChangeVersionViaUrlQueryParam(){
 
@@ -46,6 +48,18 @@ public class CanChangeVersionTest {
         }
     }
 
+    private void assertFooterShowsCorrectVersion(final int version) {
+        final WebElement footer = driver.findElement(By.className("footer"));
+        final String expectedVersionRender = String.format("v%03d", version);
+        Assertions.assertEquals(
+                "version " + expectedVersionRender,
+                footer.getText().trim().substring(0, 12),
+                String.format("Version %d does not render as %s", version, expectedVersionRender)
+        );
+    }
+
+    // there is a risk that the links on the page do not use the correct
+    // change urls and might not be clickable - check if this is the case
     @Test
     public void canChangeVersionViaHelpPage(){
 
@@ -63,25 +77,8 @@ public class CanChangeVersionTest {
                         );
 
                 assertLinkHasCorrectStateForVersion(link, version);
-//                link.click();
-//
-//                new WebDriverWait(driver, 10).until(
-//                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl() + "gui/"));
-//
-//                assertFooterShowsCorrectVersion(version);
             }
         }
-    }
-
-    private void assertLinkHasCorrectStateForVersion(final WebElement link, final int version) {
-        Assertions.assertTrue(link.isDisplayed(),
-                "link for version "+ version + " not displayed");
-        Assertions.assertTrue(link.isEnabled(),
-                "link for version "+ version + " not enabled");
-        Assertions.assertEquals(
-                url + "gui/admin/version/" + version,
-                        link.getAttribute("href"),
-                "link for version "+ version + " not admin version change as expected");
     }
 
     @Test
@@ -97,13 +94,6 @@ public class CanChangeVersionTest {
                         driver.findElement(By.cssSelector("#help-list-set-version-" + version + " a"));
 
                 assertLinkHasCorrectStateForVersion(link, version);
-
-//                link.click();
-//
-//                new WebDriverWait(driver, 10).until(
-//                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl() + "gui/"));
-//
-//                assertFooterShowsCorrectVersion(version);
             }
         }
     }
@@ -125,36 +115,28 @@ public class CanChangeVersionTest {
                         new WebDriverWait(driver,10).until(
                         ExpectedConditions.elementToBeClickable(adminMenuLocation));
 
-
                 // hover
                 new Actions(driver).moveToElement(adminMenu).perform();
-
-
 
                 final WebElement link =
                         driver.findElement(By.cssSelector("#menu-set-version-" + version + " a"));
 
                 assertLinkHasCorrectStateForVersion(link, version);
-
-//                link.click();
-//
-//                new WebDriverWait(driver,10).until(
-//                        ExpectedConditions.urlToBe(AppEnvironment.baseUrl()+"gui/"));
-//
-//                assertFooterShowsCorrectVersion(version);
             }
         }
     }
 
-    private void assertFooterShowsCorrectVersion(final int version) {
-        final WebElement footer = driver.findElement(By.className("footer"));
-        final String expectedVersionRender = String.format("v%03d", version);
+    private void assertLinkHasCorrectStateForVersion(final WebElement link, final int version) {
+        Assertions.assertTrue(link.isDisplayed(),
+                "link for version "+ version + " not displayed");
+        Assertions.assertTrue(link.isEnabled(),
+                "link for version "+ version + " not enabled");
         Assertions.assertEquals(
-                "version " + expectedVersionRender,
-                footer.getText().trim().substring(0, 12),
-                String.format("Version %d does not render as %s", version, expectedVersionRender)
-        );
+                url + "gui/admin/version/" + version,
+                link.getAttribute("href"),
+                "link for version "+ version + " not admin version change as expected");
     }
+
 
     @AfterEach
     public void closeBrowser(){
