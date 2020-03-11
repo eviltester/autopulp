@@ -4,11 +4,10 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
+import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
 import uk.co.compendiumdev.thepulper.v003.PulperNavMenu;
 
@@ -65,7 +64,7 @@ public class CanChangeVersionTest {
     @BeforeEach
     public void setupBrowser(){
         url = AppEnvironment.baseUrl();
-        driver = new ChromeDriver();
+        driver = SessionManager.getDriver();
     }
 
     // There is a risk that the link urls don't work - check if this is the case
