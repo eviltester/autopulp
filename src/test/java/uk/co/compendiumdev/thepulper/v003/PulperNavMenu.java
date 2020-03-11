@@ -1,6 +1,7 @@
 package uk.co.compendiumdev.thepulper.v003;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -188,40 +189,22 @@ public class PulperNavMenu {
             By parentLocator = parentMenuItem.getLocator();
 
             WebElement topLevelMenu =
-                    new WebDriverWait(driver,10).until(
-                            ExpectedConditions.elementToBeClickable(
-                                    parentLocator
-                            )
-                    );
+                    getMenuItemWhenClickable(driver, parentLocator);
 
             // hover
             new Actions(driver).moveToElement(topLevelMenu).perform();
 
             WebElement clickOn;
+            SearchContext searchIn=driver;
 
             if(!menuItemToClick.hasId()) {
                 // find the parent li sub ul
                 topLevelMenu = topLevelMenu.findElement(By.xpath("../ul"));
-
-                clickOn =
-                        new WebDriverWait(driver, 10).until(
-                                ExpectedConditions.elementToBeClickable(
-                                        topLevelMenu.findElement(
-                                                menuItemToClick.getLocator()
-                                        )
-                                )
-                        );
-            }else{
-                clickOn =
-                        new WebDriverWait(driver, 10).until(
-                                ExpectedConditions.elementToBeClickable(
-                                        driver.findElement(
-                                                menuItemToClick.getLocator()
-                                        )
-                                )
-                        );
+                searchIn = topLevelMenu;
             }
 
+            clickOn = findMenuItemWhenClickable(
+                    searchIn, menuItemToClick.getLocator(), driver);
 
             clickOn.click();
 
@@ -231,16 +214,28 @@ public class PulperNavMenu {
             menuItemUsed = menuItemToClick;
 
             // click on menu item
-            final WebElement clickOn =
-                    new WebDriverWait(driver, 10).until(
-                            ExpectedConditions.elementToBeClickable(
-                                    menuItemToClick.getLocator()
-                            )
-                    );
+            getMenuItemWhenClickable(driver, menuItemToClick.getLocator()).click();
 
-            clickOn.click();
         }
 
         return menuItemUsed;
+    }
+
+    private WebElement findMenuItemWhenClickable(final SearchContext search, final By locator, final WebDriver driver) {
+        return new WebDriverWait(driver, 10).until(
+                ExpectedConditions.elementToBeClickable(
+                        search.findElement(
+                                locator
+                        )
+                )
+        );
+    }
+
+    private WebElement getMenuItemWhenClickable(final WebDriver driver, final By parentLocator) {
+        return new WebDriverWait(driver, 10).until(
+                ExpectedConditions.elementToBeClickable(
+                        parentLocator
+                )
+        );
     }
 }
