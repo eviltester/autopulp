@@ -12,6 +12,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
+import uk.co.compendiumdev.thepulper.v003.PulperDropDownMenuItem;
+import uk.co.compendiumdev.thepulper.v003.PulperNavMenu;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -140,6 +142,43 @@ public class NavigationViaMenuTest {
             // wait for page to load by checking title
             new WebDriverWait(driver, 10).until(
                     ExpectedConditions.titleIs(menuXpageTitle.get(menuTitle))
+            );
+
+            menusUsed++;
+        }
+
+        Assertions.assertEquals(totalMenuItems, menusUsed + 10 /* 10 admin links */);
+    }
+
+    @Test
+    public void canNavigateAroundSiteUsingMenuAbstraction(){
+
+        driver.get(url + "?v=1");
+
+        PulperNavMenu menu = new PulperNavMenu().getForVersion(1);
+
+        int totalMenuItems = menu.countMenuItems();
+
+        Assertions.assertEquals(totalMenuItems,
+                driver.findElements(
+                        By.cssSelector("#primary_nav_wrap ul li")).size(),
+                "Unexpected number of menu items in version 1"
+        );
+
+
+        int menusUsed = 0;
+
+        for(String menuTitle : menu.itemKeys()){
+
+            System.out.println(menuTitle);
+
+            PulperDropDownMenuItem menuItemUsed;
+
+            menuItemUsed = menu.clickMenuItem(driver, menuTitle);
+
+            // wait for page to load by checking title
+            new WebDriverWait(driver, 10).until(
+                    ExpectedConditions.titleIs(menuItemUsed.pageTitle())
             );
 
             menusUsed++;

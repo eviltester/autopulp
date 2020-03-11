@@ -7,26 +7,111 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PulperNavMenu {
 
     Map<String, PulperDropDownMenuItem> menuXDetails = new HashMap<>();
+    private int fullMenuItemCount; // including admin version switching
 
     public PulperNavMenu getForVersion(final int version) {
 
-        createMenuForVersionThree();
+        switch (version){
+            case 1:
+                createMenuForVersionOne();
+                break;
+            case 2:
+                createMenuForVersionTwo();
+                break;
+            case 3:
+                createMenuForVersionThree();
+                break;
+            default:
+
+        }
 
         return this;
     }
 
     public int countMenuItems() {
-        return 44;
+        return fullMenuItemCount;
+    }
+
+    public void createMenuForVersionOne(){
+
+        fullMenuItemCount = 31;
+
+        List<PulperDropDownMenuItem> menuItemsList = new ArrayList<>();
+
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Home", "Pulp App Main Menu"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Books", "Books Menu"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Authors", "Authors Menu"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Publishers", "List of Publishers"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Series", "List of Series"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Years", "List of Years"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Search", "Search Page"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Reports", "Reports Menu"));
+        menuItemsList.add(PulperDropDownMenuItem.withoutId("Admin", "Admin Menu"));
+
+        // sub menus
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Home > Help", "Help"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Home > Menu", "Pulp App Main Menu"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Books > Table", "Table of Books"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Books > List", "List of Books"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Authors > List", "List of Authors"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Authors > FAQ", "List of Authors"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Reports > Books", "Table of Books"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Reports > Book List", "List of Books"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Reports > Authors", "List of Authors"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Reports > Publishers", "List of Publishers"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Reports > Series", "List of Series"));
+        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Reports > Years", "List of Years"));
+
+        menuXDetails = new HashMap<>();
+        for(PulperDropDownMenuItem item : menuItemsList){
+            menuXDetails.put(item.menuPath(), item);
+        }
+
+    }
+    public void createMenuForVersionTwo(){
+        fullMenuItemCount = 37;
+
+        menuXDetails = new HashMap<>();
+
+        menuXDetails.put("Home", PulperDropDownMenuItem.withoutId("Home", "Pulp App Main Menu"));
+        menuXDetails.put("Books", PulperDropDownMenuItem.withoutId("Books", "Books Menu"));
+        menuXDetails.put("Authors", PulperDropDownMenuItem.withoutId("Authors", "Authors Menu"));
+        menuXDetails.put("Publishers", PulperDropDownMenuItem.withoutId("Publishers", "List of Publishers"));
+        menuXDetails.put("Series", PulperDropDownMenuItem.withoutId("Series", "List of Series"));
+        menuXDetails.put("Years", PulperDropDownMenuItem.withoutId("Years", "List of Years"));
+        menuXDetails.put("Search", PulperDropDownMenuItem.withoutId("Search", "Search Page"));
+        menuXDetails.put("Create", PulperDropDownMenuItem.withoutId("Create", "Create Menu"));
+        menuXDetails.put("Reports", PulperDropDownMenuItem.withoutId("Reports", "Reports Menu"));
+        menuXDetails.put("Admin", PulperDropDownMenuItem.withoutId("Admin",  "Admin Menu"));
+
+        // sub menus
+        menuXDetails.put("Home > Help", PulperDropDownMenuItem.subMenuWithoutId("Help", "Home > Help"));
+        menuXDetails.put("Home > Menu", PulperDropDownMenuItem.subMenuWithoutId("Pulp App Main Menu", "Home > Menu"));
+        menuXDetails.put("Books > Table", PulperDropDownMenuItem.subMenuWithoutId("Table of Books","Books > Table"));
+        menuXDetails.put("Books > List", PulperDropDownMenuItem.subMenuWithoutId("List of Books", "Books > List"));
+        menuXDetails.put("Authors > List", PulperDropDownMenuItem.subMenuWithoutId("List of Authors", "Authors > List"));
+        menuXDetails.put("Authors > FAQ", PulperDropDownMenuItem.subMenuWithoutId("List of Authors", "Authors > FAQ"));
+        menuXDetails.put("Create > Author", PulperDropDownMenuItem.subMenuWithoutId("Create Author", "Create > Author"));
+        menuXDetails.put("Create > Series", PulperDropDownMenuItem.subMenuWithoutId("Create Series", "Create > Series"));
+        menuXDetails.put("Create > Publisher", PulperDropDownMenuItem.subMenuWithoutId("Create Publisher", "Create > Publisher"));
+        menuXDetails.put("Create > Book", PulperDropDownMenuItem.subMenuWithoutId("Create Book", "Create > Book"));
+        menuXDetails.put("Reports > Books", PulperDropDownMenuItem.subMenuWithoutId("Table of Books", "Reports > Books"));
+        menuXDetails.put("Reports > Book List", PulperDropDownMenuItem.subMenuWithoutId("List of Books", "Reports > Book List"));
+        menuXDetails.put("Reports > Authors", PulperDropDownMenuItem.subMenuWithoutId("List of Authors", "Reports > Authors"));
+        menuXDetails.put("Reports > Publishers", PulperDropDownMenuItem.subMenuWithoutId("List of Publishers", "Reports > Publishers"));
+        menuXDetails.put("Reports > Series", PulperDropDownMenuItem.subMenuWithoutId("List of Series", "Reports > Series"));
+        menuXDetails.put("Reports > Years", PulperDropDownMenuItem.subMenuWithoutId("List of Years", "Reports > Years"));
+        menuXDetails.put("Admin > Filter", PulperDropDownMenuItem.subMenuWithoutId("Filter Test Page", "Admin > Filter"));
     }
 
     public void createMenuForVersionThree(){
+
+        fullMenuItemCount = 44;
 
         // Top level menus
         menuXDetails = new HashMap<>();
@@ -88,28 +173,43 @@ public class PulperNavMenu {
             menuItemUsed = menuItemToClick;
             final PulperDropDownMenuItem parentMenuItem = menuXDetails.get(menuItem.getParentTitle());
 
+            By parentLocator = parentMenuItem.getLocator();
+
             WebElement topLevelMenu =
                     new WebDriverWait(driver,10).until(
                             ExpectedConditions.elementToBeClickable(
-                                    By.id(parentMenuItem.menuId())
+                                    parentLocator
                             )
                     );
 
             // hover
             new Actions(driver).moveToElement(topLevelMenu).perform();
 
-            // find the parent li sub ul
-            //topLevelMenu = topLevelMenu.findElement(By.xpath("../ul"));
+            WebElement clickOn;
 
-            // then click sub menu item
-            final WebElement clickOn =
-                    new WebDriverWait(driver, 10).until(
-                            ExpectedConditions.elementToBeClickable(
-                                    topLevelMenu.findElement(
-                                            By.id(menuItemToClick.menuId())
-                                    )
-                            )
-                    );
+            if(!menuItemToClick.hasId()) {
+                // find the parent li sub ul
+                topLevelMenu = topLevelMenu.findElement(By.xpath("../ul"));
+
+                clickOn =
+                        new WebDriverWait(driver, 10).until(
+                                ExpectedConditions.elementToBeClickable(
+                                        topLevelMenu.findElement(
+                                                menuItemToClick.getLocator()
+                                        )
+                                )
+                        );
+            }else{
+                clickOn =
+                        new WebDriverWait(driver, 10).until(
+                                ExpectedConditions.elementToBeClickable(
+                                        driver.findElement(
+                                                menuItemToClick.getLocator()
+                                        )
+                                )
+                        );
+            }
+
 
             clickOn.click();
 
@@ -122,7 +222,7 @@ public class PulperNavMenu {
             final WebElement clickOn =
                     new WebDriverWait(driver, 10).until(
                             ExpectedConditions.elementToBeClickable(
-                                    By.id(menuItemToClick.menuId())
+                                    menuItemToClick.getLocator()
                             )
                     );
 
