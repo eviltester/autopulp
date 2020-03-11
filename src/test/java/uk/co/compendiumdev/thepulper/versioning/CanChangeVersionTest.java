@@ -11,6 +11,51 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
 
+/*
+    This was the first test I wrote for The Pulper.
+
+    When starting to automate, you can basically start anywhere
+    because this forced me to create the pom.xml and the project.
+
+    And the initial abstractions about environment will be used
+    throughout the automated execution.
+
+    This is a fairly non-standard test because most apps don't deal
+    with multiple versions. And it is an exhaustive test simply because
+    it seemed harder to write an allpairs or random sampling of version
+    combinations than two nested loops for exhaustive coverage.
+
+    Initially the links were all clicked on for all versions so this was
+    slightly slower.
+
+    Changed it to have two high risk mitigations for query version changing
+    and url changing - these trigger clicks.
+
+    Then the rest of the version link checking tests check the attributes of
+    the links rather than clicking and following them.
+
+    In theory these tests don't need to use a browser, they could use HTTP directly
+    because the rendered HTML is not created by JavaScript.
+
+    I haven't optimised this because... I can basically start anywhere and I will
+    end up abstracting some of the code in these tests into abstractions anyway.
+
+    I may well end up creating HTTP only tests to illustrate the point.
+
+    Current risks with this:
+
+    - time of test execution
+        - could be shortened by using a single browser open for all tests
+        - could be mitigated entirely by using HTTP only
+    - multiple sessions
+        - each browser open creates a new session on the test app, this might increase
+          load on the server so probably want to find a session sharing mechanism
+          either by sharing browser or by saving and injecting session for each new
+          browser
+    - only running on Chrome as haven't created a Driver abstraction yet
+    - tests are very low level as haven't abstracted much yet, so could be maintenance
+      overhead
+ */
 public class CanChangeVersionTest {
 
     private String url;
