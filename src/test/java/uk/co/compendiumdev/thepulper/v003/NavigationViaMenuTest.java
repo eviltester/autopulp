@@ -306,6 +306,47 @@ public class NavigationViaMenuTest {
         Assertions.assertEquals(totalMenuItems, menusUsed + 10 /* 10 admin links */);
     }
 
+    @Test
+    public void canNavigateAroundSiteUsingMenuAbstraction(){
+
+        driver.get(url + "?v=3");
+
+        PulperNavMenu menu = new PulperNavMenu().getForVersion(3);
+
+        int totalMenuItems = menu.countMenuItems();
+
+        Assertions.assertEquals(44, totalMenuItems,
+                "Unexpected number of menu items defined in version 3"
+        );
+
+        Assertions.assertEquals(totalMenuItems,
+                driver.findElements(
+                        By.cssSelector("#primary_nav_wrap ul li")).size(),
+                "Unexpected number of menu items in version 3"
+        );
+
+
+        int menusUsed = 0;
+
+        for(String menuTitle : menu.itemKeys()){
+
+            System.out.println(menuTitle);
+
+            PulperDropDownMenuItem menuItemUsed;
+
+            menuItemUsed = menu.clickMenuItem(driver, menuTitle);
+
+            // wait for page to load by checking title
+            new WebDriverWait(driver, 10).until(
+                    ExpectedConditions.titleIs(menuItemUsed.pageTitle())
+            );
+
+            menusUsed++;
+        }
+
+        Assertions.assertEquals(totalMenuItems, menusUsed + 10 /* 10 admin links */);
+    }
+
     @AfterEach
     public void closeBrowser(){
         driver.close();
