@@ -1,9 +1,8 @@
 package uk.co.compendiumdev.thepulper.versioning;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
+
+import java.util.stream.IntStream;
 
 /*
     Because my nav tests are using a 'fake hover' I wanted a test that actually
@@ -30,11 +31,16 @@ public class CanUseDropDownMenuWithHover {
         driver = SessionManager.getDriver();
     }
 
-    @Test
-    public void clickHelpOnAllVersionsAfterHover(){
+    static IntStream allPulperVersions() {
+        return IntStream.rangeClosed(1, ThePulperApp.MAXVERSION);
+    }
 
-        for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
-            System.out.println(version);
+
+    @DisplayName("Use an action Hover to check can use menu")
+    @ParameterizedTest(name = "using version {0}")
+    @MethodSource("allPulperVersions")
+    public void clickHelpOnAllVersionsAfterHover(int version){
+
             driver.get(url + "?v=" + version);
 
             // get this pointer away from nav - needed to get this working
@@ -57,7 +63,6 @@ public class CanUseDropDownMenuWithHover {
 
             help.click();
             Assertions.assertEquals("Help", driver.getTitle());
-        }
     }
 
 

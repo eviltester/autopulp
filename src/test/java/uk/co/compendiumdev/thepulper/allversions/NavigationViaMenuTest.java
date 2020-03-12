@@ -3,7 +3,9 @@ package uk.co.compendiumdev.thepulper.allversions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +17,10 @@ import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
 import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperDropDownMenuItem;
 import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperNavMenu;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class NavigationViaMenuTest {
 
@@ -57,9 +62,14 @@ public class NavigationViaMenuTest {
         return IntStream.rangeClosed(1, ThePulperApp.MAXVERSION);
     }
 
-    @ParameterizedTest
+    // i want to make sure that my abstraction matches the actual nav
+    // countMenuItems is the number of items in the menu
+    // configuredNonAdminVersionItems is all the items that I would use
+    // - admin version changing would use a different mechanism
+    @DisplayName("Check model for nav matches number of items on nav")
+    @ParameterizedTest(name = "using version {0}")
     @MethodSource("allPulperVersions")
-    public void canNavigateAroundSiteUsingMenuAbstractionForVersion(int version){
+    public void checkMenuItemsMatchModel(int version) {
 
         driver.get(url + "?v=" + version);
 
@@ -70,29 +80,64 @@ public class NavigationViaMenuTest {
         Assertions.assertEquals(totalMenuItems,
                 driver.findElements(
                         By.cssSelector("#primary_nav_wrap ul li")).size(),
-                "Unexpected number of menu items in version "+version
+                "Unexpected number of menu items in version " + version
         );
 
-        // check that we do use all the menu items
-        int menusUsed = 0;
+        Assertions.assertEquals(menu.configuredNonAdminVersionMenuItems()+10,
+                driver.findElements(
+                        By.cssSelector("#primary_nav_wrap ul li")).size(),
+                "Unexpected number of menu items in version " + version
+        );
+    }
 
-        for(String menuTitle : menu.itemKeys()){
+    /*
+        Rather than have loops in the test I thought I should
+        experiment with the Paramaterized JUnit a bit more.
 
-            System.out.println(menuTitle);
+        I had to create a stream to feed in, and this seemed like
+        an easy way to create a list first, then use it as a stream.
+     */
+    static Stream allPulperVersionsAndMenuItems() {
 
-            PulperDropDownMenuItem menuItemUsed;
+        // collate all the versions and all the key sets for that version
 
-            menuItemUsed = menu.clickMenuItem(driver, menuTitle);
+        List<Arguments> args = new ArrayList<>();
 
-            // wait for page to load by checking title
-            new WebDriverWait(driver, 10).until(
-                    ExpectedConditions.titleIs(menuItemUsed.pageTitle())
-            );
+        for(int version=1; version<= ThePulperApp.MAXVERSION; version++){
+            PulperNavMenu menu = new PulperNavMenu().getForVersion(version);
 
-            menusUsed++;
+            for(String menuTitle : menu.itemKeys()){
+                args.add(Arguments.of(version, menuTitle));
+            }
         }
 
-        Assertions.assertEquals(totalMenuItems, menusUsed + 10 /* 10 admin links */);
+        return args.stream();
+    }
+
+    /*
+        By using the 'name' and DisplayName I was able to avoid
+        a System.out in the test because now the displayed
+        test name has the information that I need to see what
+        is being tested.
+     */
+    @DisplayName("Navigate Version Using Menu Abstraction")
+    @ParameterizedTest(name = "using version {0} and following path \"{1}\"")
+    @MethodSource("allPulperVersionsAndMenuItems")
+    public void canNavigateAroundSiteUsingMenuAbstractionForVersion(int version, String menuPath){
+
+        driver.get(url + "?v=" + version);
+
+        PulperNavMenu menu = new PulperNavMenu().getForVersion(version);
+
+        PulperDropDownMenuItem menuItemUsed;
+
+        menuItemUsed = menu.clickMenuItem(driver, menuPath);
+
+        // wait for page to load by checking title
+        // note if this fails then we treat that as an assertion failure
+        new WebDriverWait(driver, 10).until(
+                ExpectedConditions.titleIs(menuItemUsed.pageTitle())
+        );
     }
 
     @AfterEach

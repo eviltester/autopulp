@@ -261,4 +261,8 @@ public class PulperNavMenu {
         PulperDropDownMenuItem menuItem = menuXDetails.get(menuTitle);
         hoverOver(driver, driver.findElement(menuItem.getLocator()));
     }
+
+    public int configuredNonAdminVersionMenuItems() {
+        return menuXDetails.keySet().size();
+    }
 }

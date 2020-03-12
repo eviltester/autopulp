@@ -9,7 +9,7 @@ import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 
 
-public class CanReuseSessions {
+public class CanReuseSessionsTest {
 
     private WebDriver driver;
 

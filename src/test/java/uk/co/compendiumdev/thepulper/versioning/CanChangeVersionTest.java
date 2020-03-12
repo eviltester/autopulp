@@ -1,6 +1,9 @@
 package uk.co.compendiumdev.thepulper.versioning;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,6 +13,11 @@ import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
 import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperNavMenu;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /*
     This was the first test I wrote for The Pulper.
@@ -67,30 +75,37 @@ public class CanChangeVersionTest {
         driver = SessionManager.getDriver();
     }
 
-    // There is a risk that the link urls don't work - check if this is the case
 
-    @Test
-    public void canChangeVersionViaUrlQueryParam(){
-
-        for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
-            driver.get(url + "?v=" + version);
-
-            assertFooterShowsCorrectVersion(version);
-        }
+    /*
+        I started using this pattern in the NavigationViaMenuTest
+        and it seemed to fit hear to iterate over all versions
+        and avoid for loops in my test.
+     */
+    static IntStream allPulperVersions() {
+        return IntStream.rangeClosed(1, ThePulperApp.MAXVERSION);
     }
 
-    @Test
-    public void canChangeVersionViaDirectUrl(){
+
+    @DisplayName("Change the version using a url param and check footer OK")
+    @ParameterizedTest(name = "using version {0} \"?v={0}\"")
+    @MethodSource("allPulperVersions")
+    public void canChangeVersionViaUrlQueryParam(int version){
+
+            driver.get(url + "?v=" + version);
+            assertFooterShowsCorrectVersion(version);
+    }
+
+    @DisplayName("Change the version by directly using the gui/admin/version url")
+    @ParameterizedTest(name = "using version gui/admin/version/{0}")
+    @MethodSource("allPulperVersions")
+    public void canChangeVersionViaDirectUrl(int version){
 
         // these direct urls are used by the other pages so if we check here
         // all we do next time is check that the links are enabled, clickable
         // and have the correct href
-        for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
-            //https://thepulper.herokuapp.com/apps/pulp/gui/admin/version/10
-            driver.get(url + "gui/admin/version/" + version);
-
-            assertFooterShowsCorrectVersion(version);
-        }
+        //https://thepulper.herokuapp.com/apps/pulp/gui/admin/version/10
+        driver.get(url + "gui/admin/version/" + version);
+        assertFooterShowsCorrectVersion(version);
     }
 
     private void assertFooterShowsCorrectVersion(final int version) {
@@ -103,64 +118,76 @@ public class CanChangeVersionTest {
         );
     }
 
-    // there is a risk that the links on the page do not use the correct
-    // change urls and might not be clickable - check if this is the case
-    @Test
-    public void canChangeVersionViaHelpPage(){
 
-        for(int getversion = 1; getversion <= ThePulperApp.MAXVERSION; getversion++) {
+    /*
+        The following tests use a main version and then check for
+        other versions
 
-            driver.get(url + "gui/help" + "?v=" + getversion);
+        At the moment I do this exhaustively because 10x10 is only 100
+        but this parameterisation could do some sort of all pairs or
+        sampling if we wanted to
+     */
 
-            new WebDriverWait(driver, 10).until(
-                    ExpectedConditions.elementToBeClickable(
-                            By.cssSelector("#help-list-set-version-1 a")
-                    )
-            );
+    static Stream pulperVersionCombos() {
+        List<Arguments> args = new ArrayList<>();
 
-            for (int version = 1; version <= ThePulperApp.MAXVERSION; version++) {
-
-                final WebElement link = driver.findElement(By.cssSelector("#help-list-set-version-" + version + " a"));
-                assertLinkHasCorrectStateForVersion(link, version);
+        for(int getversion=1; getversion<= ThePulperApp.MAXVERSION; getversion++){
+            for(int version=1; version<= ThePulperApp.MAXVERSION; version++){
+                args.add(Arguments.of(getversion, version));
             }
         }
+        return args.stream();
     }
 
-    @Test
-    public void canChangeVersionViaAdminPage(){
+    // there is a risk that the links on the page do not use the correct
+    // change urls and might not be clickable - check if this is the case
+    @DisplayName("Get Help Page and check href for all listed versions")
+    @ParameterizedTest(name = "checking version help page {0} and version {1}")
+    @MethodSource("pulperVersionCombos")
+    public void canChangeVersionViaHelpPage(int getversion, int checkversion){
 
-        for(int getversion = 1; getversion <= ThePulperApp.MAXVERSION; getversion++) {
+        driver.get(url + "gui/help" + "?v=" + getversion);
+
+        new WebDriverWait(driver, 10).until(
+                ExpectedConditions.elementToBeClickable(
+                        By.cssSelector("#help-list-set-version-1 a")
+                )
+        );
+
+        final WebElement link = driver.findElement(By.cssSelector("#help-list-set-version-" + checkversion + " a"));
+        assertLinkHasCorrectStateForVersion(link, checkversion);
+    }
+
+    @DisplayName("Get Admin page and check href for all listed versions")
+    @ParameterizedTest(name = "checking version admin page {0} and version {1}")
+    @MethodSource("pulperVersionCombos")
+    public void canChangeVersionViaAdminPage(int getversion, int version){
 
             driver.get(url + "/gui/menu/admin" + "?v=" + getversion);
 
-            for (int version = 1; version <= ThePulperApp.MAXVERSION; version++) {
+            final WebElement link =
+                    driver.findElement(By.cssSelector("#help-list-set-version-" + version + " a"));
 
-                final WebElement link =
-                        driver.findElement(By.cssSelector("#help-list-set-version-" + version + " a"));
-
-                assertLinkHasCorrectStateForVersion(link, version);
-            }
-        }
+            assertLinkHasCorrectStateForVersion(link, version);
     }
 
-    @Test
-    public void canChangeVersionViaAdminMenu(){
-
-        for(int getversion = 1; getversion <= ThePulperApp.MAXVERSION; getversion++) {
+    @DisplayName("Get base page fro version and check admin menu contains all versions")
+    @ParameterizedTest(name = "checking version {0} and looking for version {1}")
+    @MethodSource("pulperVersionCombos")
+    public void canChangeVersionViaAdminMenu(int getversion, int version){
 
             driver.get(url+ "?v=" + getversion);
 
             final PulperNavMenu nav = new PulperNavMenu().getForVersion(getversion);
             nav.hoverMenuItem(driver, "Admin");
 
-            for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
+//            for(int version = 1; version <= ThePulperApp.MAXVERSION; version++){
 
                 final WebElement link =
                         driver.findElement(By.cssSelector("#menu-set-version-" + version + " a"));
 
                 assertLinkHasCorrectStateForVersion(link, version);
-            }
-        }
+ //           }
     }
 
     private void assertLinkHasCorrectStateForVersion(final WebElement link, final int version) {
