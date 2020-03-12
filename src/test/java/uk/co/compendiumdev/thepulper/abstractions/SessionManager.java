@@ -3,6 +3,7 @@ package uk.co.compendiumdev.thepulper.abstractions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 /*
     I called this SessionManager, rather than DriverManager
@@ -19,8 +20,24 @@ import org.openqa.selenium.firefox.FirefoxDriver;
     using CI.
  */
 public class SessionManager {
+
+    // this was how I checked that the property was working
+    // now I can set the property externally and run the tests
+    // or manually use this from within code and then I don't have
+    // to keep changing the default
+    // static String setBrowserTo = System.setProperty("autopulp.browser", "firefox");
+
     public static WebDriver getDriver() {
-        return new FirefoxDriver();
-        //return new ChromeDriver();
+
+        String chosenBrowser = System.getProperty("autopulp.browser", "chrome");
+
+        switch (chosenBrowser){
+            case "chrome":
+                return new ChromeDriver();
+            case "firefox":
+                return new FirefoxDriver();
+            default:
+                return new ChromeDriver();
+        }
     }
 }
