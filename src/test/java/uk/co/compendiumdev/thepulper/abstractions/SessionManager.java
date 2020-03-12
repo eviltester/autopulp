@@ -27,8 +27,10 @@ public class SessionManager {
     // or manually use this from within code and then I don't have
     // to keep changing the default
     // static String setBrowserTo = System.setProperty("autopulp.browser", "firefox");
+    //static String setReuseSessionTo = System.setProperty("autopulp.reuseSession", "false");
 
     static Cookie sessionCookie;
+    static Boolean reuseSession = Boolean.parseBoolean(System.getProperty("autopulp.reuseSession", "true"));
 
     public static WebDriver getDriver() {
 
@@ -45,12 +47,14 @@ public class SessionManager {
         }
 
         // cookie sharing to support session sharing
-        driver.get(AppEnvironment.baseUrl());
-        if(sessionCookie==null){
-            sessionCookie = driver.manage().getCookieNamed("JSESSIONID");
-        }else{
-            driver.manage().deleteCookieNamed("JSESSIONID");
-            driver.manage().addCookie(sessionCookie);
+        if(reuseSession) {
+            driver.get(AppEnvironment.baseUrl());
+            if (sessionCookie == null) {
+                sessionCookie = driver.manage().getCookieNamed("JSESSIONID");
+            } else {
+                driver.manage().deleteCookieNamed("JSESSIONID");
+                driver.manage().addCookie(sessionCookie);
+            }
         }
 
         return driver;
