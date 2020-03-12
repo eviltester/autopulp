@@ -77,10 +77,11 @@ public class SessionManager {
     // or manually use this from within code and then I don't have
     // to keep changing the default
     // static String setBrowserTo = System.setProperty("autopulp.browser", "firefox");
-    // static String setReuseSessionTo = System.setProperty("autopulp.reuseSession", "false");
-    // static String setShareDriverTo = System.setProperty("autopulp.shareDriver", "false");
+    //static String setReuseSessionTo = System.setProperty("autopulp.reuseSession", "false");
+    //static String setShareDriverTo = System.setProperty("autopulp.shareDriver", "false");
 
     static Cookie sessionCookie;
+    static Cookie apiCookie;
     static Boolean reuseSession;
 
     // if we share a driver then we have to use SessionManager.quitDriver to close that driver
@@ -103,6 +104,7 @@ public class SessionManager {
                 // TODO: should delete any local storage as well
                 if(!reuseSession){
                     sharedDriver.manage().deleteCookieNamed("JSESSIONID");
+                    sharedDriver.manage().deleteCookieNamed("X-API-AUTH");
                 }
                 return sharedDriver;
             }
@@ -149,6 +151,12 @@ public class SessionManager {
             } else {
                 driver.manage().deleteCookieNamed("JSESSIONID");
                 driver.manage().addCookie(sessionCookie);
+            }
+            if (apiCookie == null) {
+                apiCookie = driver.manage().getCookieNamed("X-API-AUTH");
+            } else {
+                driver.manage().deleteCookieNamed("X-API-AUTH");
+                driver.manage().addCookie(apiCookie);
             }
         }
     }
