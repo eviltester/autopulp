@@ -1,0 +1,32 @@
+# configuration for webdriver changed considerably when travis updated
+# switched from firefox to CHROMEDRIVER
+dist: xenial
+addons:
+  chrome: stable
+  firefox: latest
+# changes for xvfb required for xenial as per https://docs.travis-ci.com/user/gui-and-headless-browsers/
+services:
+  - xvfb
+install:
+  # hacking in stuff from seleniumhq https://github.com/SeleniumHQ/selenium/blob/master/.travis.yml
+  #                                  https://github.com/SeleniumHQ/selenium/blob/master/scripts/travis/install.sh
+  # install chromedriver
+  - export CHROMEDRIVER_VERSION=`curl -s http://chromedriver.storage.googleapis.com/LATEST_RELEASE`
+  - curl -L -O "http://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+  - unzip chromedriver_linux64.zip && chmod +x chromedriver && sudo mv chromedriver /usr/local/bin
+  # install firefox Driver hard coded to version 26
+  - curl -L -O "https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz"
+  - tar -xzf geckodriver-v0.26.0-linux64.tar.gz && chmod +x geckodriver && sudo mv geckodriver /usr/local/bin
+  # No need for separate install of HTMLUnitDriver since this is a maven dependency
+
+language: java
+script:
+  # FIREFOX Driver requires additional install
+  - xvfb-run -e /dev/stdout --auto-servernum --server-args="-screen 0 1024x768x24" mvn clean test -Dautopulp.browser=chrome
+  - xvfb-run -e /dev/stdout --auto-servernum --server-args="-screen 0 1024x768x24" mvn clean test -Dautopulp.browser=firefox
+
+jdk:
+  - oraclejdk11
+  - openjdk8
+  - openjdk10
+  - openjdk11
