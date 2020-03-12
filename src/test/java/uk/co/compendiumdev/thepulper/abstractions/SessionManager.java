@@ -1,5 +1,6 @@
 package uk.co.compendiumdev.thepulper.abstractions;
 
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -27,17 +28,31 @@ public class SessionManager {
     // to keep changing the default
     // static String setBrowserTo = System.setProperty("autopulp.browser", "firefox");
 
+    static Cookie sessionCookie;
+
     public static WebDriver getDriver() {
 
         String chosenBrowser = System.getProperty("autopulp.browser", "chrome");
+        WebDriver driver;
 
         switch (chosenBrowser){
-            case "chrome":
-                return new ChromeDriver();
             case "firefox":
-                return new FirefoxDriver();
+                driver = new FirefoxDriver();
+                break;
+            case "chrome":
             default:
-                return new ChromeDriver();
+                driver = new ChromeDriver();
         }
+
+        // cookie sharing to support session sharing
+        driver.get(AppEnvironment.baseUrl());
+        if(sessionCookie==null){
+            sessionCookie = driver.manage().getCookieNamed("JSESSIONID");
+        }else{
+            driver.manage().deleteCookieNamed("JSESSIONID");
+            driver.manage().addCookie(sessionCookie);
+        }
+
+        return driver;
     }
 }

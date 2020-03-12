@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
-import uk.co.compendiumdev.thepulper.v003.PulperNavMenu;
+import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperNavMenu;
 
 /*
     This was the first test I wrote for The Pulper.

@@ -1,4 +1,4 @@
-package uk.co.compendiumdev.thepulper.v003;
+package uk.co.compendiumdev.thepulper.abstractions.navigation;
 
 import org.openqa.selenium.By;
 

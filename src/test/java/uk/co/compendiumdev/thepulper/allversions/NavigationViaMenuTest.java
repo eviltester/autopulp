@@ -1,4 +1,4 @@
-package uk.co.compendiumdev.thepulper.v001_v010;
+package uk.co.compendiumdev.thepulper.allversions;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -12,8 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
-import uk.co.compendiumdev.thepulper.v003.PulperDropDownMenuItem;
-import uk.co.compendiumdev.thepulper.v003.PulperNavMenu;
+import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperDropDownMenuItem;
+import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperNavMenu;
 
 import java.util.stream.IntStream;
 
