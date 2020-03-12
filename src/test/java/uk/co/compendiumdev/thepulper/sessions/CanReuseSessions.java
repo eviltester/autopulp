@@ -13,16 +13,22 @@ public class CanReuseSessions {
 
     private WebDriver driver;
 
+    String resetReuseSessionTo;
 
     @Test
     public void checkSessionOnAdminPage(){
 
-        driver = SessionManager.getDriver();
+        // force session manager to re-use session
+        resetReuseSessionTo = System.getProperty("autopulp.reuseSession");
+
+        String setReuseSessionTo = System.setProperty("autopulp.reuseSession", "true");
+
+        driver = SessionManager.getUnmanagedDriver();
         driver.get(AppEnvironment.baseUrl() + "/gui/menu/admin?v=10");
         final String session1apikey = driver.findElement(By.id("apikeyvalue")).getText();
         driver.close();
 
-        driver = SessionManager.getDriver();
+        driver = SessionManager.getUnmanagedDriver();
         driver.get(AppEnvironment.baseUrl() + "/gui/menu/admin?v=10");
         final String session2apikey = driver.findElement(By.id("apikeyvalue")).getText();
         driver.close();
@@ -34,8 +40,13 @@ public class CanReuseSessions {
 
     @AfterEach
     public void closeBrowser(){
+
+        if(resetReuseSessionTo!=null){
+            System.setProperty("autopulp.reuseSession", resetReuseSessionTo);
+        }
+
         try {
-            driver.close();
+            SessionManager.quit(driver);
         }catch (Exception e){
             // probably closed already, don't really expect this test to fail
         }

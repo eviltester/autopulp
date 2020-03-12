@@ -97,7 +97,7 @@ public class NavigationViaMenuTest {
 
     @AfterEach
     public void closeBrowser(){
-        driver.close();
+        SessionManager.quit(driver);
     }
 
 }
