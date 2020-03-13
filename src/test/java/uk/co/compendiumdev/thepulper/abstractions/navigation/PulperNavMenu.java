@@ -28,6 +28,7 @@ public class PulperNavMenu {
             case 8:
             case 9:
             case 10:
+            case 11:
                 createMenuForVersionThree();
                 break;
             default:
@@ -42,8 +43,6 @@ public class PulperNavMenu {
     }
 
     public void createMenuForVersionOne(){
-
-        fullMenuItemCount = 31;
 
         List<PulperDropDownMenuItem> menuItemsList = new ArrayList<>();
 
@@ -73,6 +72,8 @@ public class PulperNavMenu {
 
         addListAsMenuX(menuItemsList);
 
+        fullMenuItemCount = menuItemsList.size() + countAdminMenuItems();
+
     }
 
     private void addListAsMenuX(final List<PulperDropDownMenuItem> menuItemsList) {
@@ -83,7 +84,6 @@ public class PulperNavMenu {
     }
 
     public void createMenuForVersionTwo(){
-        fullMenuItemCount = 37;
 
         List<PulperDropDownMenuItem> menuItemsList = new ArrayList<>();
 
@@ -118,11 +118,11 @@ public class PulperNavMenu {
         menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithoutId("Admin > Filter", "Filter Test Page"));
 
         addListAsMenuX(menuItemsList);
+
+        fullMenuItemCount = menuItemsList.size() + countAdminMenuItems();
     }
 
     public void createMenuForVersionThree(){
-
-        fullMenuItemCount = 44;
 
         // Top level menus
         menuXDetails = new HashMap<>();
@@ -142,7 +142,6 @@ public class PulperNavMenu {
 
 
         // sub menus
-        menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithId("Home > Help", "Help", "menu-help"));
         menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithId("Home > Help", "Help", "menu-help"));
         menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithId("Home > Menu", "Pulp App Main Menu", "submenu-home"));
         menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithId("Books > Table", "Table of Books", "menu-books-table"));
@@ -170,6 +169,7 @@ public class PulperNavMenu {
         menuItemsList.add(PulperDropDownMenuItem.subMenuItemWithId("Admin > Filter", "Filter Test Page", "menu-admin-filter"));
 
         addListAsMenuX(menuItemsList);
+        fullMenuItemCount = menuItemsList.size() + countAdminMenuItems();
     }
 
     public Set<String> itemKeys() {
@@ -264,5 +264,9 @@ public class PulperNavMenu {
 
     public int configuredNonAdminVersionMenuItems() {
         return menuXDetails.keySet().size();
+    }
+
+    public int countAdminMenuItems() {
+        return 11;
     }
 }

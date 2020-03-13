@@ -75,15 +75,11 @@ public class NavigationViaMenuTest {
 
         PulperNavMenu menu = new PulperNavMenu().getForVersion(version);
 
-        int totalMenuItems = menu.countMenuItems();
+        Assertions.assertEquals(menu.countMenuItems(),
+                    menu.countAdminMenuItems() + menu.configuredNonAdminVersionMenuItems());
 
-        Assertions.assertEquals(totalMenuItems,
-                driver.findElements(
-                        By.cssSelector("#primary_nav_wrap ul li")).size(),
-                "Unexpected number of menu items in version " + version
-        );
-
-        Assertions.assertEquals(menu.configuredNonAdminVersionMenuItems()+10,
+        Assertions.assertEquals(menu.configuredNonAdminVersionMenuItems()+
+                menu.countAdminMenuItems(),
                 driver.findElements(
                         By.cssSelector("#primary_nav_wrap ul li")).size(),
                 "Unexpected number of menu items in version " + version

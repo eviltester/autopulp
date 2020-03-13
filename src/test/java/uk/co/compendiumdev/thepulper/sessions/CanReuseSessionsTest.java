@@ -15,8 +15,6 @@ public class CanReuseSessionsTest {
     private WebDriver driver;
 
     String resetReuseSessionTo;
-
-    @Disabled
     @Test
     public void checkSessionOnAdminPage(){
 

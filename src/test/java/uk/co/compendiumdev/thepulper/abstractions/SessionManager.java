@@ -72,13 +72,17 @@ import org.openqa.selenium.safari.SafariDriver;
  */
 public class SessionManager {
 
+    static final String DEFAULT_REUSE_SESSION="true";
+    static final String DEFAULT_SHARE_DRIVER_REUSE_BROWSER="true";
+    static final String DEFAULT_BROWSER="chrome";
+
     // this was how I checked that the property was working
     // now I can set the property externally and run the tests
     // or manually use this from within code and then I don't have
     // to keep changing the default
     // static String setBrowserTo = System.setProperty("autopulp.browser", "firefox");
-    //static String setReuseSessionTo = System.setProperty("autopulp.reuseSession", "false");
-    //static String setShareDriverTo = System.setProperty("autopulp.shareDriver", "false");
+    //static String setReuseSessionTo = System.setProperty("autopulp.reuseSession", "true");
+    //static String setShareDriverTo = System.setProperty("autopulp.shareDriver", "true");
 
     static Cookie sessionCookie;
     static Cookie apiCookie;
@@ -95,7 +99,7 @@ public class SessionManager {
         // then return it
         // TODO: we should really check if driver is working
         // and if not, create a new one
-        shareDriver = Boolean.parseBoolean(System.getProperty("autopulp.shareDriver", "true"));
+        shareDriver = Boolean.parseBoolean(System.getProperty("autopulp.shareDriver", DEFAULT_SHARE_DRIVER_REUSE_BROWSER));
 
         if(shareDriver){
             if(sharedDriver!=null){
@@ -141,7 +145,7 @@ public class SessionManager {
 
     private static void useSharedSession(final WebDriver driver) {
 
-        reuseSession = Boolean.parseBoolean(System.getProperty("autopulp.reuseSession", "true"));
+        reuseSession = Boolean.parseBoolean(System.getProperty("autopulp.reuseSession", DEFAULT_REUSE_SESSION));
 
         // cookie sharing to support session sharing
         if(reuseSession) {
@@ -174,7 +178,7 @@ public class SessionManager {
     }
 
     public static WebDriver getCleanUnmanagedDriver() {
-        String chosenBrowser = System.getProperty("autopulp.browser", "chrome");
+        String chosenBrowser = System.getProperty("autopulp.browser", DEFAULT_BROWSER);
         WebDriver driver;
 
         switch (chosenBrowser){
