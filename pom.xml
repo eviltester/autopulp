@@ -20,6 +20,8 @@
 
     <dependencies>
 
+
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -31,6 +33,14 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.java}</version>
+        </dependency>
+
+        <!-- Applitools SDK -->
+
+        <dependency>
+            <groupId>com.applitools</groupId>
+            <artifactId>eyes-selenium-java3</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
     </dependencies>

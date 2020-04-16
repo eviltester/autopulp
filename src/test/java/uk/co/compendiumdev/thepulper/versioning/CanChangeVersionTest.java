@@ -158,6 +158,7 @@ public class CanChangeVersionTest {
         assertLinkHasCorrectStateForVersion(link, checkversion);
     }
 
+
     @DisplayName("Get Admin page and check href for all listed versions")
     @ParameterizedTest(name = "checking version admin page {0} and version {1}")
     @MethodSource("pulperVersionCombos")

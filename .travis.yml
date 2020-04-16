@@ -22,8 +22,9 @@ install:
 language: java
 script:
   # FIREFOX Driver requires additional install
-  - xvfb-run -e /dev/stdout --auto-servernum --server-args="-screen 0 1024x768x24" mvn clean test -Dautopulp.browser=chrome
   - xvfb-run -e /dev/stdout --auto-servernum --server-args="-screen 0 1024x768x24" mvn clean test -Dautopulp.browser=firefox
+  #- xvfb-run -e /dev/stdout --auto-servernum --server-args="-screen 0 1024x768x24" mvn clean test -Dautopulp.browser=chrome
+
 
 jdk:
   - oraclejdk11
