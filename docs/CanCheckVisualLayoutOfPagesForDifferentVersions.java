@@ -14,6 +14,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 
+// experiment and not used
+/*
+
+requires in pom.xml
+
+        <!-- Applitools SDK -->
+
+        <dependency>
+            <groupId>com.applitools</groupId>
+            <artifactId>eyes-selenium-java3</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+ */
 public class CanCheckVisualLayoutOfPagesForDifferentVersions {
 
 
@@ -35,7 +49,7 @@ public class CanCheckVisualLayoutOfPagesForDifferentVersions {
         url = AppEnvironment.baseUrl();
         runner = new ClassicRunner();
         eyes = new Eyes(runner);
-        eyes.setApiKey("et1mRpqgS7nRI04ewMnL9Jei9qpugBHYKodmLnqJk0s110");
+        //eyes.setApiKey("add the api key here");
         eyes.setBatch(batch);
         managedDriver = SessionManager.getDriver();
         //driver = eyes.open(managedDriver); // if we don't add appname etc then test fails with no meaningful error message
