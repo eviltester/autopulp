@@ -86,11 +86,11 @@ public class SessionManager {
 
     static Cookie sessionCookie;
     static Cookie apiCookie;
-    static Boolean reuseSession;
+    static Boolean reuseSession=true;
 
     // if we share a driver then we have to use SessionManager.quitDriver to close that driver
     // using driver.quit will 'break' this
-    static Boolean shareDriver=false;
+    static Boolean shareDriver=true;
     static WebDriver sharedDriver;
 
     public static WebDriver getDriver() {
@@ -102,6 +102,7 @@ public class SessionManager {
         shareDriver = Boolean.parseBoolean(System.getProperty("autopulp.shareDriver", DEFAULT_SHARE_DRIVER_REUSE_BROWSER));
 
         if(shareDriver){
+            System.out.println("Sharing Driver");
             if(sharedDriver!=null){
                 // just because we are using the same driver
                 // does not mean we need the same session
