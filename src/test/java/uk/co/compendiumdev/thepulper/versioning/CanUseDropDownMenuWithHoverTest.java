@@ -30,7 +30,7 @@ public class CanUseDropDownMenuWithHoverTest {
     @BeforeEach
     public void setupBrowser(TestInfo testinfo){
         url = AppEnvironment.baseUrl();
-        driver = SessionManager.getDriver();
+        driver = SessionManager.getUnmanagedDriver();
         testLog = new ConsoleTestLog(testinfo);
         testLog.start();
     }
