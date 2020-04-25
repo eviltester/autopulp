@@ -7,7 +7,7 @@ import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.junitsupport.ConsoleTestLog;
 
-
+@Disabled("to see if this is interfering with the hover test")
 public class CanReuseSessionsTest {
 
     private WebDriver driver;
