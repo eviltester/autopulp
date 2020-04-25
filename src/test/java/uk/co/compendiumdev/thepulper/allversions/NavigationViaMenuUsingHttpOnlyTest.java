@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 
     Compare with the WebDriver version to see the difference
  */
-@Disabled("temporarily until hover test works")
 public class NavigationViaMenuUsingHttpOnlyTest {
 
     private String url;

@@ -23,7 +23,6 @@ import java.util.stream.Stream;
     These tests don't really need WebDriver so converted to use HTTP directly
     using JSOUP - compare this with the WebDriver Version to see the difference
  */
-@Disabled("temporarily until hover test works")
 public class CanChangeVersionUsingHttpOnlyTest {
 
     private String url;
