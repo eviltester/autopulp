@@ -50,7 +50,8 @@ public class CanUseDropDownMenuWithHoverTest {
         // get this pointer away from nav - needed to get this working
         // reliably on Firefox
         // hover on admin to drop menu down
-        WebElement admin = driver.findElement(By.linkText("Admin"));
+        WebElement admin = new WebDriverWait(driver, 10).
+                until(ExpectedConditions.elementToBeClickable(By.linkText("Admin")));
         new Actions(driver).moveToElement(admin).perform();
         admin = admin.findElement(By.xpath(".."));
 

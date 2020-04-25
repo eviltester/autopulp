@@ -86,7 +86,7 @@ public class SessionManager {
     // now I can set the property externally and run the tests
     // or manually use this from within code and then I don't have
     // to keep changing the default
-    // static String setBrowserTo = System.setProperty("autopulp.browser", "firefox");
+    //static String setBrowserTo = System.setProperty("autopulp.browser", "firefox");
     //static String setReuseSessionTo = System.setProperty("autopulp.reuseSession", "true");
     //static String setShareDriverTo = System.setProperty("autopulp.shareDriver", "true");
 
