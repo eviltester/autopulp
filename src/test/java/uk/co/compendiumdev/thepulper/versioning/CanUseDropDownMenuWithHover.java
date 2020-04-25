@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
+import uk.co.compendiumdev.thepulper.junitsupport.ConsoleTestLog;
 
 import java.util.stream.IntStream;
 
@@ -24,11 +25,14 @@ public class CanUseDropDownMenuWithHover {
 
     private String url;
     private WebDriver driver;
+    ConsoleTestLog testLog;
 
     @BeforeEach
-    public void setupBrowser(){
+    public void setupBrowser(TestInfo testinfo){
         url = AppEnvironment.baseUrl();
         driver = SessionManager.getDriver();
+        testLog = new ConsoleTestLog(testinfo);
+        testLog.start();
     }
 
     static IntStream allPulperVersions() {
@@ -69,5 +73,6 @@ public class CanUseDropDownMenuWithHover {
     @AfterEach
     public void closeBrowser(){
         SessionManager.quit(driver);
+        testLog.stop();
     }
 }

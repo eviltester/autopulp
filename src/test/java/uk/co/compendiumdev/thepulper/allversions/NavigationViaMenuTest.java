@@ -1,9 +1,6 @@
 package uk.co.compendiumdev.thepulper.allversions;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,6 +13,7 @@ import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
 import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperDropDownMenuItem;
 import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperNavMenu;
+import uk.co.compendiumdev.thepulper.junitsupport.ConsoleTestLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +24,14 @@ public class NavigationViaMenuTest {
 
     private String url;
     private WebDriver driver;
+    private ConsoleTestLog testLog;
 
     @BeforeEach
-    public void setupBrowser(){
+    public void setupBrowser(TestInfo testinfo){
         url = AppEnvironment.baseUrl();
         driver = SessionManager.getDriver();
+        testLog = new ConsoleTestLog(testinfo);
+        testLog.start();
     }
 
     /*
@@ -139,6 +140,7 @@ public class NavigationViaMenuTest {
     @AfterEach
     public void closeBrowser(){
         SessionManager.quit(driver);
+        testLog.stop();
     }
 
 }

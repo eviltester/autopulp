@@ -13,6 +13,7 @@ import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
 import uk.co.compendiumdev.thepulper.abstractions.navigation.PulperNavMenu;
+import uk.co.compendiumdev.thepulper.junitsupport.ConsoleTestLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,11 +69,14 @@ public class CanChangeVersionTest {
 
     private String url;
     private WebDriver driver;
+    private ConsoleTestLog testLog;
 
     @BeforeEach
-    public void setupBrowser(){
+    public void setupBrowser(TestInfo testinfo){
         url = AppEnvironment.baseUrl();
         driver = SessionManager.getDriver();
+        testLog = new ConsoleTestLog(testinfo);
+        testLog.start();
     }
 
 
@@ -206,5 +210,6 @@ public class CanChangeVersionTest {
     @AfterEach
     public void closeBrowser(){
         SessionManager.quit(driver);
+        testLog.stop();
     }
 }

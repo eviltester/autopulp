@@ -1,18 +1,23 @@
 package uk.co.compendiumdev.thepulper.sessions;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
+import uk.co.compendiumdev.thepulper.junitsupport.ConsoleTestLog;
 
 
 public class CanReuseSessionsTest {
 
     private WebDriver driver;
+    private ConsoleTestLog testLog;
+
+    @BeforeEach
+    public void startTest(TestInfo testinfo){
+        testLog = new ConsoleTestLog(testinfo);
+        testLog.start();
+    }
 
     String resetReuseSessionTo;
     @Test
@@ -50,5 +55,7 @@ public class CanReuseSessionsTest {
         }catch (Exception e){
             // probably closed already, don't really expect this test to fail
         }
+
+        testLog.stop();
     }
 }
