@@ -45,34 +45,37 @@ public class CanUseDropDownMenuWithHoverTest {
     @MethodSource("allPulperVersions")
     public void clickHelpOnAllVersionsAfterHover(int version){
 
-            driver.get(url + "?v=" + version);
+        driver.get(url + "?v=" + version);
 
-            // get this pointer away from nav - needed to get this working
-            // reliably on Firefox
-            // this failed on travis, I think because Contact is off screen
-            // so changed to H2 number 2, which is authors
-            new Actions(driver).moveToElement(
-                    driver.findElements(By.cssSelector("h2")).get(1)).perform();
+        // get this pointer away from nav - needed to get this working
+        // reliably on Firefox
+        // hover on admin to drop menu down
+        WebElement admin = driver.findElement(By.linkText("Admin"));
+        new Actions(driver).moveToElement(admin).perform();
+        admin = admin.findElement(By.xpath(".."));
 
-            WebElement home = driver.findElement(By.linkText("Home"));
+        // find v001
+        final WebElement v1 = new WebDriverWait(driver, 10).until(
+                ExpectedConditions.elementToBeClickable(
+                        admin.findElement(By.linkText("v001"))
+                )
+        );
 
-            // hover on Home to drop menu down
-            new Actions(driver).moveToElement(home).perform();
-            home = home.findElement(By.xpath("..")); // get parent li
+        WebElement home = driver.findElement(By.linkText("Home"));
 
-            // find Help
-            final WebElement help = new WebDriverWait(driver, 10).until(
-                    ExpectedConditions.elementToBeClickable(
-                            home.findElement(By.linkText("Help"))
-                    )
-            );
+        // hover on Home to drop menu down
+        new Actions(driver).moveToElement(home).perform();
+        home = home.findElement(By.xpath("..")); // get parent li
 
-            help.click();
-            Assertions.assertEquals("Help", driver.getTitle());
+        // find Help
+        final WebElement help = new WebDriverWait(driver, 10).until(
+                ExpectedConditions.elementToBeClickable(
+                        home.findElement(By.linkText("Help"))
+                )
+        );
 
-            // and after visiting help, let's move the mouse out of the way again
-            new Actions(driver).moveToElement(
-                    driver.findElements(By.cssSelector("h2")).get(1)).perform();
+        help.click();
+        Assertions.assertEquals("Help", driver.getTitle());
     }
 
 
