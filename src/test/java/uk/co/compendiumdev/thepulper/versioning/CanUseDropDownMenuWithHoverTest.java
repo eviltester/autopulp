@@ -39,11 +39,10 @@ public class CanUseDropDownMenuWithHoverTest {
         // TODO: when working on travis ci,
         // this does not work for all versions and starts saying it can't find elements
         // I think this is related to travis since it works locally
-        // so I have amended this test to just use 2 versions
-        // to be honest, even this seems overkill, but I want a reminder
-        // that I need to look into how to make WebDriver more reliable
+        // so I have amended this test to just use 1 version
+        // I need to look into how to make WebDriver more reliable
         // on Travis or find a different cloud execution system
-        //return IntStream.rangeClosed(1, 2);
+        //return IntStream.rangeClosed(1, 1);
         return IntStream.rangeClosed(1, ThePulperApp.MAXVERSION);
     }
 
@@ -58,7 +57,7 @@ public class CanUseDropDownMenuWithHoverTest {
         // get this pointer away from nav - needed to get this working
         // reliably on Firefox
         // hover on admin to drop menu down
-        // if I open in clean window then it should work
+        // instead of moving then open new window
 //        WebElement admin = new WebDriverWait(driver, 10).
 //                until(ExpectedConditions.elementToBeClickable(By.linkText("Admin")));
 //        new Actions(driver).moveToElement(admin).perform();
@@ -71,7 +70,8 @@ public class CanUseDropDownMenuWithHoverTest {
 //                )
 //        );
 
-        WebElement home = driver.findElement(By.linkText("Home"));
+        WebElement home = new WebDriverWait(driver, 10).
+                until(ExpectedConditions.elementToBeClickable(By.linkText("Home")));
 
         // hover on Home to drop menu down
         new Actions(driver).moveToElement(home).perform();
