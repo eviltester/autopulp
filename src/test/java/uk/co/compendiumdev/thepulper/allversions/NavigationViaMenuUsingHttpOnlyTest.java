@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
     Compare with the WebDriver version to see the difference
  */
-public class NavigationViaMenuTestHttpOnly {
+public class NavigationViaMenuUsingHttpOnlyTest {
 
     private String url;
     private WebDriver driver;

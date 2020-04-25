@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
     does hover, and uses Action to do it, but this means I can't use the mouse when
     this is running.
  */
-public class CanUseDropDownMenuWithHover {
+public class CanUseDropDownMenuWithHoverTest {
 
     private String url;
     private WebDriver driver;
