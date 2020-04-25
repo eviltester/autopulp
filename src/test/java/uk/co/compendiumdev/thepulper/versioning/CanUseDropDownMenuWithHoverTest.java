@@ -49,8 +49,10 @@ public class CanUseDropDownMenuWithHoverTest {
 
             // get this pointer away from nav - needed to get this working
             // reliably on Firefox
+            // this failed on travis, I think because Contact is off screen
+            // so changed to H2 number 2, which is authors
             new Actions(driver).moveToElement(
-                    driver.findElement(By.linkText("Contact"))).perform();
+                    driver.findElements(By.cssSelector("h2")).get(1)).perform();
 
             WebElement home = driver.findElement(By.linkText("Home"));
 
