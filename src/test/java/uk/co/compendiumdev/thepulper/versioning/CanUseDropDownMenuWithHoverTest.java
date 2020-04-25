@@ -69,6 +69,10 @@ public class CanUseDropDownMenuWithHoverTest {
 
             help.click();
             Assertions.assertEquals("Help", driver.getTitle());
+
+            // and after visiting help, let's move the mouse out of the way again
+            new Actions(driver).moveToElement(
+                    driver.findElements(By.cssSelector("h2")).get(1)).perform();
     }
 
 
