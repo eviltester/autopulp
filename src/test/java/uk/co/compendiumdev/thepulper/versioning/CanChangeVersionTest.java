@@ -65,6 +65,7 @@ import java.util.stream.Stream;
     - tests are very low level as haven't abstracted much yet, so could be maintenance
       overhead
  */
+@Disabled("The JSOUP HttpOnly test is mostly equivalent to this")
 public class CanChangeVersionTest {
 
     private String url;

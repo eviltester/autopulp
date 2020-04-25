@@ -8,6 +8,7 @@ public class PulperDropDownMenuItem {
     private final String menuTitle;
     private final String pageTitle;
     private final String menuPath;
+    private String href;
 
     public PulperDropDownMenuItem(final String menuid, final String menutitle, final String pagetitle) {
         this.menuId = menuid;
@@ -78,7 +79,23 @@ public class PulperDropDownMenuItem {
         }
     }
 
+    public String getLocatorCss() {
+        if(hasId()){
+            return "#" + menuId;
+        }else{
+            return menuTitle;
+        }
+    }
+
     public boolean hasId() {
         return menuId!=null && menuId.length()>0;
+    }
+
+    public void hasUrl(final String href) {
+        this.href = href;
+    }
+
+    public String getUrl() {
+        return href;
     }
 }

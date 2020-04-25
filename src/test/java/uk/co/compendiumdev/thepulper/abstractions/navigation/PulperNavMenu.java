@@ -1,5 +1,8 @@
 package uk.co.compendiumdev.thepulper.abstractions.navigation;
 
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -221,6 +224,36 @@ public class PulperNavMenu {
         }
 
         return menuItemUsed;
+    }
+
+    public PulperDropDownMenuItem locateMenuItem(final Document document, final String menuTitle) {
+
+        final String[] menuPath = menuTitle.split(" > ");
+        Elements menuItems = document.select("nav#primary_nav_wrap ul li a");
+        Element parent=null;
+        String menuKey = "";
+        String menuSeparator = "";
+
+        for(String pathItem : menuPath){
+            menuKey = menuKey + menuSeparator + pathItem;
+            if(parent!=null){
+                // get the parent of the a, which is a li, which contains any sub menu as ul li
+                menuItems = parent.parent().select("ul li a");
+            }
+            for(Element menuItem : menuItems){
+                if(menuItem.text().equals(pathItem)){
+                    // found the parent
+                    parent = menuItem;
+                    break;
+                }
+            }
+            menuSeparator = " > ";
+        }
+
+        // parent is now the element
+        PulperDropDownMenuItem menuItem = menuXDetails.get(menuKey);
+        menuItem.hasUrl(parent.attr("href"));
+        return menuItem;
     }
 
     private void hoverOver(final WebDriver driver, final WebElement topLevelMenu) {

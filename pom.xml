@@ -16,6 +16,7 @@
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
         <selenium.java>3.141.59</selenium.java>
         <maven.surefire.plugin>2.22.2</maven.surefire.plugin>
+        <jsoup.version>1.13.1</jsoup.version>
     </properties>
 
     <dependencies>
@@ -35,7 +36,13 @@
             <version>${selenium.java}</version>
         </dependency>
 
-
+        <!-- adding JSoup to support simple HTML based parsing assertions -->
+        <dependency>
+            <!-- jsoup HTML parser library @ https://jsoup.org/ -->
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
 
     </dependencies>
     

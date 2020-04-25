@@ -1,10 +1,16 @@
 package uk.co.compendiumdev.thepulper.abstractions;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
     I called this SessionManager, rather than DriverManager
@@ -92,6 +98,7 @@ public class SessionManager {
     // using driver.quit will 'break' this
     static Boolean shareDriver=true;
     static WebDriver sharedDriver;
+    private static Map<String, String> jsoupcookies=new HashMap<>();
 
     public static WebDriver getDriver() {
 
@@ -163,6 +170,16 @@ public class SessionManager {
                 driver.manage().deleteCookieNamed("X-API-AUTH");
                 driver.manage().addCookie(apiCookie);
             }
+
+
+            jsoupcookies.clear();
+            if(sessionCookie!=null) {
+                jsoupcookies.put("JSESSIONID", sessionCookie.getValue());
+            }
+            if(apiCookie!=null) {
+                jsoupcookies.put("X-API-AUTH", apiCookie.getValue());
+            }
+
         }
     }
 
@@ -198,5 +215,31 @@ public class SessionManager {
         WebDriver driver = getCleanUnmanagedDriver();
         useSharedSession(driver);
         return driver;
+    }
+
+    public static Document jsoupConnectionGet(final String url) {
+
+        if(jsoupcookies.size()==0){
+            // if we haven't set any cookies then we didn't create a browser first so
+            // store the current cookies for re-use by jsoup
+            try {
+                final Connection.Response response = Jsoup.connect(url).execute();
+                final String sessionCookieFR = response.cookie("JSESSIONID");
+                if(sessionCookieFR!=null){
+                    jsoupcookies.put("JSESSIONID", sessionCookieFR);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Document connect=null;
+        try {
+            connect = Jsoup.connect(url).cookies(jsoupcookies).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return connect;
     }
 }

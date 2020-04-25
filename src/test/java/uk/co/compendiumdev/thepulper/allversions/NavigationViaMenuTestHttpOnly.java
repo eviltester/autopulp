@@ -1,13 +1,11 @@
 package uk.co.compendiumdev.thepulper.allversions;
 
+import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.compendiumdev.thepulper.abstractions.AppEnvironment;
 import uk.co.compendiumdev.thepulper.abstractions.SessionManager;
 import uk.co.compendiumdev.thepulper.abstractions.ThePulperApp;
@@ -20,8 +18,12 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-@Disabled("Don't really need WebDriver for this - can use HTTP directly")
-public class NavigationViaMenuTest {
+/*
+    This test didn't really need to be done using WebDriver.
+
+    Compare with the WebDriver version to see the difference
+ */
+public class NavigationViaMenuTestHttpOnly {
 
     private String url;
     private WebDriver driver;
@@ -73,7 +75,9 @@ public class NavigationViaMenuTest {
     @MethodSource("allPulperVersions")
     public void checkMenuItemsMatchModel(int version) {
 
-        driver.get(url + "?v=" + version);
+        // this test doesn't really need webdriver, so use JSoup as the connection mechanism
+
+        final Document document = SessionManager.jsoupConnectionGet(url + "?v=" + version);
 
         PulperNavMenu menu = new PulperNavMenu().getForVersion(version);
 
@@ -81,9 +85,8 @@ public class NavigationViaMenuTest {
                     menu.countAdminMenuItems() + menu.configuredNonAdminVersionMenuItems());
 
         Assertions.assertEquals(menu.configuredNonAdminVersionMenuItems()+
-                menu.countAdminMenuItems(),
-                driver.findElements(
-                        By.cssSelector("#primary_nav_wrap ul li")).size(),
+                        menu.countAdminMenuItems(),
+                document.select("#primary_nav_wrap ul li").size(),
                 "Unexpected number of menu items in version " + version
         );
     }
@@ -123,19 +126,19 @@ public class NavigationViaMenuTest {
     @MethodSource("allPulperVersionsAndMenuItems")
     public void canNavigateAroundSiteUsingMenuAbstractionForVersion(int version, String menuPath){
 
-        driver.get(url + "?v=" + version);
+        // assuming we can actually click on the menu then check that the urls lead where we expect
+        // and we don't need WebDriver for that
+        final Document document = SessionManager.jsoupConnectionGet(url + "?v=" + version);
 
         PulperNavMenu menu = new PulperNavMenu().getForVersion(version);
 
         PulperDropDownMenuItem menuItemUsed;
 
-        menuItemUsed = menu.clickMenuItem(driver, menuPath);
+        menuItemUsed = menu.locateMenuItem(document, menuPath);
 
-        // wait for page to load by checking title
-        // note if this fails then we treat that as an assertion failure
-        new WebDriverWait(driver, 10).until(
-                ExpectedConditions.titleIs(menuItemUsed.pageTitle())
-        );
+        final Document menuNavigatedPage = SessionManager.jsoupConnectionGet(AppEnvironment.domainUrl() + menuItemUsed.getUrl());
+        Assertions.assertEquals(menuItemUsed.pageTitle(), menuNavigatedPage.title());
+
     }
 
     @AfterEach
