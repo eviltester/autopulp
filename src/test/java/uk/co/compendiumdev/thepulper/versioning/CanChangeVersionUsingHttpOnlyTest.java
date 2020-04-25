@@ -26,13 +26,11 @@ import java.util.stream.Stream;
 public class CanChangeVersionUsingHttpOnlyTest {
 
     private String url;
-    private WebDriver driver;
     private ConsoleTestLog testLog;
 
     @BeforeEach
     public void setupBrowser(TestInfo testinfo){
         url = AppEnvironment.baseUrl();
-        //driver = SessionManager.getDriver();
         testLog = new ConsoleTestLog(testinfo);
         testLog.start();
     }
@@ -151,7 +149,6 @@ public class CanChangeVersionUsingHttpOnlyTest {
 
     @AfterEach
     public void closeBrowser(){
-        SessionManager.quit(driver);
         testLog.stop();
     }
 }
